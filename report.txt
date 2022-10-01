@@ -1,0 +1,203 @@
+2.8.8.2
+test and train split by id
+
+best 65000
+------------------------------------------------------------------------
+REPORT
+FID--------------------------------
+FID on test dataset: fid_n=47.8, fid_e_z=34.3, fid_e_r=32.6
+FID on train dataset: fid_n=10.7, fid_e_z=4.8, fid_e_r=5.1
+FID on train dataset by class:
+  Class:02, fid:14.7
+  Class:03, fid:15.7
+  Class:04, fid:16.9
+  Class:05, fid:16.0
+  Class:06, fid:18.0
+  Class:07, fid:15.0
+  Class:08, fid:16.7
+  Class:09, fid:16.0
+  Class:10, fid:14.8
+  Class:11, fid:14.8
+  Class:12, fid:14.8
+  Class:13, fid:15.1
+  Class:14, fid:15.9
+  Class:15, fid:16.3
+  Class:16, fid:17.0
+  Class:17, fid:15.7
+  Class:18, fid:16.2
+  Class:19, fid:17.0
+  Class:20, fid:19.1
+  Class:21, fid:17.6
+  Class:22, fid:17.0
+  Class:23, fid:16.2
+  Class:24, fid:16.0
+  Class:25, fid:16.3
+  Class:26, fid:16.2
+  Class:avg, fid:16.2
+
+Encoder--------------------------------
+Encoder on test dataset:
+  Class:02, std between code: 0.08439, std in code: 0.12226, mean:0.00509
+  Class:03, std between code: 0.12740, std in code: 0.15640, mean:0.02024
+  Class:04, std between code: 0.11061, std in code: 0.12260, mean:0.02217
+  Class:05, std between code: 0.11015, std in code: 0.14070, mean:0.03370
+  Class:06, std between code: 0.09738, std in code: 0.14225, mean:-0.00592
+  Class:07, std between code: 0.09715, std in code: 0.12624, mean:0.01868
+  Class:08, std between code: 0.09754, std in code: 0.10610, mean:0.00805
+  Class:09, std between code: 0.08709, std in code: 0.12723, mean:-0.00381
+  Class:10, std between code: 0.09037, std in code: 0.12222, mean:0.01025
+  Class:11, std between code: 0.10862, std in code: 0.13593, mean:0.03057
+  Class:12, std between code: 0.09814, std in code: 0.13514, mean:0.02954
+  Class:13, std between code: 0.09805, std in code: 0.13533, mean:0.02644
+  Class:14, std between code: 0.12552, std in code: 0.15424, mean:0.03299
+  Class:15, std between code: 0.09474, std in code: 0.13902, mean:0.02432
+  Class:16, std between code: 0.09610, std in code: 0.12418, mean:0.01804
+  Class:17, std between code: 0.10064, std in code: 0.12998, mean:0.00263
+  Class:18, std between code: 0.08759, std in code: 0.12121, mean:-0.00792
+  Class:19, std between code: 0.09922, std in code: 0.10540, mean:0.00883
+  Class:20, std between code: 0.09964, std in code: 0.11458, mean:0.00704
+  Class:21, std between code: 0.10303, std in code: 0.11940, mean:-0.00921
+  Class:22, std between code: 0.11047, std in code: 0.13715, mean:-0.01285
+  Class:23, std between code: 0.10541, std in code: 0.10999, mean:0.00600
+  Class:24, std between code: 0.09482, std in code: 0.09992, mean:0.00333
+  Class:25, std between code: 0.09321, std in code: 0.10420, mean:0.01951
+  Class:26, std between code: 0.07818, std in code: 0.09278, mean:0.01498
+  Class:all, std between code: 0.07818, std in code: 0.09278, mean:0.01498
+Encoder on train dataset:
+  Class:02, std between code: 0.07992, std in code: 0.12259, mean:-0.00007
+  Class:03, std between code: 0.08489, std in code: 0.11344, mean:0.00718
+  Class:04, std between code: 0.09416, std in code: 0.09713, mean:0.00861
+  Class:05, std between code: 0.08567, std in code: 0.11646, mean:0.02249
+  Class:06, std between code: 0.08600, std in code: 0.12986, mean:-0.01368
+  Class:07, std between code: 0.08795, std in code: 0.11023, mean:0.00743
+  Class:08, std between code: 0.08688, std in code: 0.09179, mean:-0.00767
+  Class:09, std between code: 0.09154, std in code: 0.12972, mean:-0.01883
+  Class:10, std between code: 0.08717, std in code: 0.12236, mean:0.00537
+  Class:11, std between code: 0.08490, std in code: 0.10959, mean:0.01941
+  Class:12, std between code: 0.08651, std in code: 0.11263, mean:0.01706
+  Class:13, std between code: 0.09083, std in code: 0.11275, mean:0.01345
+  Class:14, std between code: 0.09098, std in code: 0.10947, mean:0.01757
+  Class:15, std between code: 0.08693, std in code: 0.12428, mean:0.01536
+  Class:16, std between code: 0.09007, std in code: 0.11552, mean:0.00399
+  Class:17, std between code: 0.08469, std in code: 0.11709, mean:-0.00654
+  Class:18, std between code: 0.09463, std in code: 0.11739, mean:-0.01327
+  Class:19, std between code: 0.09546, std in code: 0.09886, mean:0.00318
+  Class:20, std between code: 0.10146, std in code: 0.11664, mean:0.00116
+  Class:21, std between code: 0.09225, std in code: 0.10640, mean:-0.01644
+  Class:22, std between code: 0.08918, std in code: 0.11329, mean:-0.01600
+  Class:23, std between code: 0.08985, std in code: 0.09168, mean:-0.00018
+  Class:24, std between code: 0.09823, std in code: 0.09820, mean:-0.00705
+  Class:25, std between code: 0.09329, std in code: 0.10018, mean:0.01133
+  Class:26, std between code: 0.08914, std in code: 0.09647, mean:0.00680
+  Class:all, std between code: 0.08914, std in code: 0.09647, mean:0.00680
+
+IS--------------------------------
+is_train_n_mean:1.99, is_train_n_is_std:0.12
+is_train_e_mean:1.98, is_train_e_is_std:0.15
+is_eval_n_mean:1.97, is_eval_n_is_std:0.13
+is_eval_e_r_mean:1.91, is_eval_e_r_is_std:0.14
+is_eval_e_z_mean:1.91, is_eval_e_z_is_std:0.15
+
+
+---
+REPORT
+FID--------------------------------
+FID on test dataset: fid_n=44.4, fid_e_z=32.9, fid_e_r=31.2
+FID on train dataset: fid_n=11.6, fid_e_z=5.1, fid_e_r=5.5
+FID on train dataset by class:
+  Class:02, fid:15.2
+  Class:03, fid:16.1
+  Class:04, fid:17.0
+  Class:05, fid:16.5
+  Class:06, fid:18.7
+  Class:07, fid:15.7
+  Class:08, fid:16.5
+  Class:09, fid:15.9
+  Class:10, fid:15.2
+  Class:11, fid:15.4
+  Class:12, fid:15.3
+  Class:13, fid:15.6
+  Class:14, fid:16.4
+  Class:15, fid:17.0
+  Class:16, fid:17.5
+  Class:17, fid:15.8
+  Class:18, fid:16.5
+  Class:19, fid:17.3
+  Class:20, fid:19.7
+  Class:21, fid:18.0
+  Class:22, fid:17.0
+  Class:23, fid:16.2
+  Class:24, fid:16.6
+  Class:25, fid:16.4
+  Class:26, fid:16.7
+  Class:avg, fid:16.6
+
+Encoder--------------------------------
+Encoder on test dataset:
+  Class:02, std between code: 0.07803, std in code: 0.11819, mean:0.00180
+  Class:03, std between code: 0.13561, std in code: 0.16422, mean:0.01387
+  Class:04, std between code: 0.11333, std in code: 0.12105, mean:0.01733
+  Class:05, std between code: 0.10702, std in code: 0.13653, mean:0.02647
+  Class:06, std between code: 0.09311, std in code: 0.13688, mean:-0.01643
+  Class:07, std between code: 0.09957, std in code: 0.12356, mean:0.01561
+  Class:08, std between code: 0.09446, std in code: 0.10166, mean:0.00268
+  Class:09, std between code: 0.08518, std in code: 0.12565, mean:-0.01591
+  Class:10, std between code: 0.08661, std in code: 0.12058, mean:0.00746
+  Class:11, std between code: 0.11518, std in code: 0.13992, mean:0.02668
+  Class:12, std between code: 0.10051, std in code: 0.13450, mean:0.02974
+  Class:13, std between code: 0.09421, std in code: 0.13014, mean:0.02295
+  Class:14, std between code: 0.12860, std in code: 0.15322, mean:0.03008
+  Class:15, std between code: 0.09234, std in code: 0.13770, mean:0.01747
+  Class:16, std between code: 0.09462, std in code: 0.11838, mean:0.01207
+  Class:17, std between code: 0.09886, std in code: 0.13048, mean:-0.00510
+  Class:18, std between code: 0.08653, std in code: 0.12013, mean:-0.01048
+  Class:19, std between code: 0.09807, std in code: 0.09970, mean:0.00181
+  Class:20, std between code: 0.09511, std in code: 0.10800, mean:-0.00157
+  Class:21, std between code: 0.09430, std in code: 0.11008, mean:-0.01571
+  Class:22, std between code: 0.11383, std in code: 0.13470, mean:-0.02120
+  Class:23, std between code: 0.10404, std in code: 0.10557, mean:-0.00031
+  Class:24, std between code: 0.09544, std in code: 0.09897, mean:0.00104
+  Class:25, std between code: 0.08725, std in code: 0.09617, mean:0.01613
+  Class:26, std between code: 0.08103, std in code: 0.09962, mean:0.00919
+  Class:all, std between code: 0.08103, std in code: 0.09962, mean:0.00919
+Encoder on train dataset:
+  Class:02, std between code: 0.07179, std in code: 0.12187, mean:-0.00276
+  Class:03, std between code: 0.07926, std in code: 0.10695, mean:0.00771
+  Class:04, std between code: 0.08801, std in code: 0.09045, mean:0.00996
+  Class:05, std between code: 0.07959, std in code: 0.10939, mean:0.02277
+  Class:06, std between code: 0.08084, std in code: 0.12571, mean:-0.02181
+  Class:07, std between code: 0.08253, std in code: 0.10546, mean:0.01136
+  Class:08, std between code: 0.08162, std in code: 0.08690, mean:-0.00927
+  Class:09, std between code: 0.08689, std in code: 0.12860, mean:-0.02510
+  Class:10, std between code: 0.08156, std in code: 0.12183, mean:0.00536
+  Class:11, std between code: 0.07873, std in code: 0.10328, mean:0.02150
+  Class:12, std between code: 0.08038, std in code: 0.10774, mean:0.02069
+  Class:13, std between code: 0.08545, std in code: 0.10897, mean:0.01658
+  Class:14, std between code: 0.08560, std in code: 0.10337, mean:0.01874
+  Class:15, std between code: 0.08222, std in code: 0.12123, mean:0.01424
+  Class:16, std between code: 0.08369, std in code: 0.10958, mean:0.00176
+  Class:17, std between code: 0.07926, std in code: 0.11267, mean:-0.00765
+  Class:18, std between code: 0.09032, std in code: 0.11306, mean:-0.01345
+  Class:19, std between code: 0.09137, std in code: 0.09336, mean:0.00444
+  Class:20, std between code: 0.09678, std in code: 0.11323, mean:-0.00441
+  Class:21, std between code: 0.08768, std in code: 0.10181, mean:-0.01891
+  Class:22, std between code: 0.08370, std in code: 0.10836, mean:-0.02022
+  Class:23, std between code: 0.08422, std in code: 0.08553, mean:0.00031
+  Class:24, std between code: 0.09343, std in code: 0.09307, mean:-0.00498
+  Class:25, std between code: 0.08795, std in code: 0.09449, mean:0.01348
+  Class:26, std between code: 0.08440, std in code: 0.09089, mean:0.01099
+  Class:all, std between code: 0.08440, std in code: 0.09089, mean:0.01099
+
+IS--------------------------------
+is_test_n_mean:1.62, is_test_n_is_std:0.00
+is_test_e_mean:1.62, is_test_e_is_std:0.06
+is_eval_test_n_mean:1.49, is_eval_test_n_is_std:0.04
+is_eval_test_e_r_mean:1.53, is_eval_test_e_r_is_std:0.03
+is_eval_test_e_z_mean:1.52, is_eval_test_e_z_is_std:0.05
+
+is_train_n_mean:1.97, is_train_n_is_std:0.15
+is_train_e_mean:1.97, is_train_e_is_std:0.14
+is_eval_train_n_mean:2.00, is_eval_train_n_is_std:0.15
+is_eval_train_e_r_mean:1.92, is_eval_train_e_r_is_std:0.14
+is_eval_train_e_z_mean:1.94, is_eval_train_e_z_is_std:0.14
+
