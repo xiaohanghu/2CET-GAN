@@ -2,7 +2,15 @@
 2 cycles expression transfer GAN (2CET-GAN) is a Pixel to Pixel Human Facial Expression Transfer GAN.
 This is a pytorch implementation.
 
+# Demo
 <p ><img src="evaluation/output/demo_matrix_1.png" /></p>
+Compare with StarGAN v2:
+<p ><img src="evaluation/output/demo_compare_11.png" /></p>
+Continuity: 
+<p ><img width="70%" src="evaluation/output/code_face_CFEE_11.png" /></p>
+
+# Structure
+<p ><img src="evaluation/output/structure_1.png" /></p>
 
 ## Datasets
 You can apply the access of **CFEE** at: http://cbcsl.ece.ohio-state.edu/dbform_compound.html
