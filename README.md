@@ -4,7 +4,13 @@ This is a pytorch implementation.
 
 <p ><img src="evaluation/output/demo_matrix_1.png" /></p>
 
-Train:
+## Datasets
+You can apply the access of **CFEE** at: http://cbcsl.ece.ohio-state.edu/dbform_compound.html
+<br>
+You can find the code to preprocess the dataset under dir `dataset/`
+
+## Training
+Please define `$DATASET_ROOT` and `$OUTPUT_ROOT` before the command:
 ```bash
 python main.py \
 --mode train \
@@ -25,8 +31,8 @@ python main.py \
 --test_dir ${DATASET_ROOT}/test \
 --eval_dir /content/eval \
 --batch_size 8 \
---output_dir ${DATA_ROOT}/output \
---models_dir ${DATA_ROOT}/models \
+--output_dir ${OUTPUT_ROOT}/output \
+--models_dir ${OUTPUT_ROOT}/models \
 --output_every 500 \
 --save_every 5000 \
 --total_iter 100000
