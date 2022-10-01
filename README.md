@@ -5,7 +5,7 @@ This is a pytorch implementation.
 # Demo
 <p ><img width="90%" src="evaluation/output/demo_matrix_1.png" /></p>
 Compare with StarGAN v2:
-<p ><img width="80%" src="evaluation/output/demo_compare_11.png" /></p>
+<p ><img width="95%" src="evaluation/output/demo_compare_11.png" /></p>
 Continuity: 
 <p ><img width="50%" src="evaluation/output/code_face_CFEE_11.png" /></p>
 
