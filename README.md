@@ -50,17 +50,17 @@ python main.py \
 ```
 
 ## Evaluation
-Please set `--eval_model_step` to your step number in the command:
+Please set `--eval_model_step` and `--eval_dir` in the command:
 ```bash
 python main.py \
 --mode eval \
+--eval_dir /content/eval \
 --eval_model_step 65000 \
 --img_size 128 \
 --code_dim 32 \
 --encoder_grey True \
 --train_dir ${DATASET_ROOT}/train \
 --test_dir ${DATASET_ROOT}/test \
---eval_dir /content/eval \
 --batch_size 8 \
 --output_dir ${OUTPUT_ROOT}/output \
 --models_dir ${OUTPUT_ROOT}/models \
