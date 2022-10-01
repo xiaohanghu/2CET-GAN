@@ -40,7 +40,7 @@ python main.py \
 ```
 
 ## Evaluation
-Please set `--eval_model_step` before the command:
+Please set `--eval_model_step` in the command:
 ```bash
 python main.py \
 --mode eval \
