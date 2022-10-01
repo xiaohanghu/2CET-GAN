@@ -40,12 +40,12 @@ python main.py \
 ```
 
 ## Evaluation
-Please set `--eval_model_step` in the command:
+Please set `--eval_model_step` to your step number in the command:
 ```bash
 python main.py \
 --mode eval \
 --resume_iter 0 \
---eval_model_step 0 \
+--eval_model_step 65000 \
 --test False \
 --to_grey False \
 --img_size 128 \
@@ -68,3 +68,5 @@ python main.py \
 --total_iter 100000
 
 ```
+
+##  Pretrained model
