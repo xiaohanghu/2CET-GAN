@@ -16,10 +16,10 @@ def adv_loss(logits, target):
 
 
 def r1_reg(d_out, x_in):
-    '''
+    """
     zero-centered gradient penalty for real images.
     It can force the output not to change too much if the inputs are similar
-    '''
+    """
     batch_size = x_in.size(0)
     grad_dout = torch.autograd.grad(
         outputs=d_out.sum(), inputs=x_in,
@@ -37,9 +37,9 @@ def encode(encoder, x_z, config):
 
 
 def loss_D_NEN(model, config, sample):
-    '''
+    """
     D loss of cycle 1: N to E to N
-    '''
+    """
     x_n, x_e = sample.x_n.to(config.device), sample.x_e.to(config.device)
 
     x_e.requires_grad_()
@@ -72,9 +72,9 @@ def loss_D_NEN(model, config, sample):
 
 
 def loss_D_ENE(model, config, sample):
-    '''
+    """
     D loss of cycle 2: E to N to E
-    '''
+    """
     x_n, x_e = sample.x_n.to(config.device), sample.x_e.to(config.device)
 
     y_n = torch.zeros(x_n.shape[0], dtype=torch.long).to(config.device)
@@ -108,9 +108,9 @@ def loss_D_ENE(model, config, sample):
 
 
 def loss_GE_NEN(model, config, sample):
-    '''
+    """
     G and E loss of cycle 1: N to E to N
-    '''
+    """
     x_n = sample.x_n.to(config.device)
 
     # n
@@ -181,9 +181,9 @@ def loss_GE_NEN(model, config, sample):
 
 
 def loss_GE_ENE(model, config, sample):
-    '''
+    """
     G and E loss of cycle 2: E to N to E
-    '''
+    """
     x_e = sample.x_e.to(config.device)
 
     y_n = torch.zeros(x_e.shape[0], dtype=torch.long).to(config.device)
@@ -211,7 +211,7 @@ def loss_GE_ENE(model, config, sample):
 
 
 def train_step(model, optims, config, sample, loss_sts, loss_funs):
-    '''
+    """
     Do backward and step.
 
     :param model: model
@@ -219,7 +219,7 @@ def train_step(model, optims, config, sample, loss_sts, loss_funs):
     :param config: config
     :param loss_sts: loss status
     :param loss_funs: loss functions
-    '''
+    """
     loss_total = None
     for loss_fun in loss_funs:
         loss, losses = loss_fun(model, config, sample)

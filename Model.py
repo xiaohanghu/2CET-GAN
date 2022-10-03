@@ -236,16 +236,15 @@ def create_model(config):
         Discriminator(EncoderBlk(img_dim=config.img_dim, img_size=config.img_size), num_domains=config.num_domains)).to(
         config.device)
     generator_s = copy.deepcopy(generator)
-    # latent_encoder_s = copy.deepcopy(latent_encoder)
     encoder_s = copy.deepcopy(encoder)
 
-    modules = Munch(generator=generator,
-                    # latent_encoder=latent_encoder,
-                    encoder=encoder,
-                    discriminator=discriminator)
-    # stable modules
-    modules_s = Munch(generator=generator_s,
-                      # latent_encoder=latent_encoder_s,
-                      encoder=encoder_s)
+    module = Munch(generator=generator,
+                   encoder=encoder,
+                   discriminator=discriminator)
 
-    return modules, modules_s
+    # model_s is a stable version of model
+    # model_s will take the average of the last n back propagation
+    module_s = Munch(generator=generator_s,
+                     encoder=encoder_s)
+
+    return module, module_s

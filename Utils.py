@@ -70,6 +70,12 @@ def set_lr(optim):
 
 
 def copy_model_average(model, model_s):
+    """
+    Computing moving average of model and save the result to model_s
+    :param model: original model
+    :param model_s: stable model
+    :return: None
+    """
     for name, m_s in model_s.items():
         copy_average(model[name], m_s, beta=0.999)
 
@@ -296,13 +302,13 @@ def save_image_RGB(imgs, ncol, filename):
 
 
 def save_image(x, ncol, filename):
-    '''
+    """
 
     :param x: could be the direct output of the generator
     :param ncol:
     :param filename:
     :return:
-    '''
+    """
     x = denormalize(x)
     vutils.save_image(x.cpu(), filename, nrow=ncol, padding=0)
 
@@ -367,9 +373,9 @@ def load_model_all(config, model, model_s, optims, step):
 
 
 def losses_average(losses_avg, losses, alpha=0.02):
-    '''
+    """
     exponential weighted moving average
-    '''
+    """
     for name, value_new in losses.items():
         if value_new is None:
             continue
