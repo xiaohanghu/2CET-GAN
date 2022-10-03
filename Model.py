@@ -62,7 +62,7 @@ class ResBlk(nn.Module):
         return x / math.sqrt(2)  # unit variance
 
 
-# adaptive instance normalization to inject s into G
+# adaptive instance normalization to inject c into G
 class AdaIN(nn.Module):
     def __init__(self, code_dim, num_features):  # num_features relate to the image
         super().__init__()
