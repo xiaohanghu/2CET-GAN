@@ -74,7 +74,7 @@ def get_config(parser=None):
                         help='Weight for adversarial loss on emotional face')
     parser.add_argument('--lambda_reg', type=float, default=1,
                         help='Weight for zero-centered gradient penalty (R1 regularization) for real images')
-    parser.add_argument('--lambda_cyc_e_config', type=str, default=1.,
+    parser.add_argument('--lambda_cyc_e_config', type=str, default="0,1,1.0,1.0",
                         help='Weight for cycle consistency loss on emotional faces. Format: {1:int},{2:int},{3:float},{4:float}. meaning: increase to {3} at step {1}, and then increase/decrease to {4} at step {2}.')
     parser.add_argument('--lambda_ds_e_config', type=str, default=1.,
                         help='Weight for diversity sensitive loss on emotional faces. Format: {1:int},{2:int},{3:float},{4:float}. meaning: increase to {3} at step {1}, and then increase/decrease to {4} at step {2}.')
