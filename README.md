@@ -1,6 +1,6 @@
 ## 2CET-GAN &mdash; Official PyTorch Implementation
 ![Python 3.10](https://img.shields.io/badge/python-3.10-green.svg?style=plastic) ![PyTorch 1.11.0](https://img.shields.io/badge/pytorch-1.11.0-green.svg?style=plastic) 
-[![License: CC BY-NC 4.0](https://licensebuttons.net/l/by-nc/4.0/80x15.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 2 cycles expression transfer GAN (2CET-GAN) is a Pixel to Pixel Human Facial Expression Transfer GAN.
 This is a pytorch implementation.

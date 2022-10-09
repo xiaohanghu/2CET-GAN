@@ -1,7 +1,7 @@
 """
 2CET-GAN
 Copyright (c) 2022-present, Xiaohang Hu.
-This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+This work is licensed under the MIT License.
 """
 
 import os

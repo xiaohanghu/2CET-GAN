@@ -1,7 +1,7 @@
 """
 2CET-GAN
 Copyright (c) 2022-present, Xiaohang Hu.
-This work is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License.
+This work is licensed under the MIT License.
 
 Models was heavily based on models from StarGAN v2: https://github.com/clovaai/stargan-v2/blob/master/core/model.py
 Users should be careful about adopting these models in any commercial matters.
