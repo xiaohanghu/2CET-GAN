@@ -127,11 +127,11 @@ def location_scale_auto_decrease(face_location, scale, img_h, img_w):
 
 
 def extract_face(image, up=-0.05, scale=1.9):
-    """
+    '''
 
     :param file:
     :return: RGB
-    """
+    '''
     # image = face_recognition.load_image_file(file)
     img_h = image.shape[0]
     img_w = image.shape[1]
@@ -151,11 +151,11 @@ def extract_face(image, up=-0.05, scale=1.9):
 
 
 def extract_face_fixed(img):
-    """
+    '''
     for CFD
     :param img:
     :return:
-    """
+    '''
     # print(f"Read image [{img_file}]")
     h = img.shape[0]
     offset = int(h * 0.02)

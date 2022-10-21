@@ -3,9 +3,14 @@
 Copyright (c) 2022-present, Xiaohang Hu.
 This work is licensed under the MIT License.
 
-Models was heavily based on models from StarGAN v2: https://github.com/clovaai/stargan-v2/blob/master/core/model.py
+Models was heavily based on StarGAN v2: https://github.com/clovaai/stargan-v2
 Users should be careful about adopting these models in any commercial matters.
 https://github.com/clovaai/stargan-v2#license
+
+Changes from StarGAN v2:
+1. Mapping network was removed.
+2. High-pass filter was removed.
+3. Adding grayscale process to Encoder
 """
 
 import math
@@ -62,7 +67,7 @@ class ResBlk(nn.Module):
         return x / math.sqrt(2)  # unit variance
 
 
-# adaptive instance normalization to inject c into G
+# adaptive instance normalization to inject s into G
 class AdaIN(nn.Module):
     def __init__(self, code_dim, num_features):  # num_features relate to the image
         super().__init__()
@@ -181,7 +186,7 @@ class EncoderBlk(nn.Module):
         return self.shared(x)
 
 
-class ExpressionEncoder(nn.Module):
+class Encoder(nn.Module):
     def __init__(self, encoderBlk, code_dim=64, encoder_grey=False):
         super().__init__()
         self.encoder_grey = encoder_grey
@@ -221,30 +226,40 @@ class Discriminator(nn.Module):
         return out
 
 
-def create_model(config):
-    generator = nn.DataParallel(
-        Generator(img_dim=config.img_dim, img_size=config.img_size, code_dim=config.code_dim)).to(config.device)
+def parallel(net, config):
+    if "gpu_ids" in config:
+        result = nn.DataParallel(net, device_ids=config.gpu_ids)
+    else:
+        result = nn.DataParallel(net)
+    result.to(config.device)
+    return result
 
+
+def create_model(config):
+    generator = Generator(img_dim=config.img_dim, img_size=config.img_size, code_dim=config.code_dim)
     encoder_img_dim = config.img_dim
     if config.encoder_grey:
         encoder_img_dim = 1
-    encoder = nn.DataParallel(
-        ExpressionEncoder(EncoderBlk(img_dim=encoder_img_dim, img_size=config.img_size), code_dim=config.code_dim,
-                          encoder_grey=config.encoder_grey)).to(
-        config.device)
-    discriminator = nn.DataParallel(
-        Discriminator(EncoderBlk(img_dim=config.img_dim, img_size=config.img_size), num_domains=config.num_domains)).to(
-        config.device)
+    encoder = Encoder(EncoderBlk(img_dim=encoder_img_dim, img_size=config.img_size), code_dim=config.code_dim,
+                      encoder_grey=config.encoder_grey)
+    discriminator = Discriminator(EncoderBlk(img_dim=config.img_dim, img_size=config.img_size),
+                                  num_domains=config.num_domains)
+
+    generator = parallel(generator, config)
+    encoder = parallel(encoder, config)
+    discriminator = parallel(discriminator, config)
+
     generator_s = copy.deepcopy(generator)
+    # latent_encoder_s = copy.deepcopy(latent_encoder)
     encoder_s = copy.deepcopy(encoder)
 
-    module = Munch(generator=generator,
-                   encoder=encoder,
-                   discriminator=discriminator)
+    modules = Munch(generator=generator,
+                    # latent_encoder=latent_encoder,
+                    encoder=encoder,
+                    discriminator=discriminator)
+    # stable modules
+    modules_s = Munch(generator=generator_s,
+                      # latent_encoder=latent_encoder_s,
+                      encoder=encoder_s)
 
-    # model_s is a stable version of model
-    # model_s will take the average of the last n back propagation
-    module_s = Munch(generator=generator_s,
-                     encoder=encoder_s)
-
-    return module, module_s
+    return modules, modules_s

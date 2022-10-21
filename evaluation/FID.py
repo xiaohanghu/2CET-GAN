@@ -4,7 +4,6 @@ Copyright (c) 2022-present, Xiaohang Hu.
 This work is licensed under the MIT License.
 """
 
-
 import torch
 import numpy as np
 from scipy.linalg import sqrtm
@@ -19,6 +18,7 @@ from munch import Munch
 
 from DataLoader import SingleFolderDataset
 from DataLoader import create_data_loader_eval
+
 
 # frechet inception distance (FID)
 class InceptionV3(nn.Module):
@@ -50,12 +50,11 @@ class InceptionV3(nn.Module):
         return x.view(x.size(0), -1)
 
 
-
 @torch.no_grad()
 def calculate_act(path, img_paths, inception, batch_size, config):
     loader = create_data_loader_eval(path, img_paths, config.img_size, batch_size)
     actvs = []
-    for (x, id, cls) in tqdm(loader, total=len(loader)):
+    for (x, id, cls, _) in tqdm(loader, total=len(loader)):
         actv = inception(x.to(config.device))
         actvs.append(actv)
     actvs = torch.cat(actvs, dim=0).cpu().detach().numpy()

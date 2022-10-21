@@ -51,12 +51,17 @@ def generate_eval_n(root_dir, eval_dir, models_s, transform, config):
     c_n_real = torch.FloatTensor(torch.zeros((1, config.code_dim))).to(config.device)
 
     # E to N
-    for index, (img_e, id, cls) in enumerate(e_dataset):
+    print(f"generate_eval_n:")
+    pbar = tqdm(total=n_e)
+    for index, (img_e, id, cls, full_name_e) in enumerate(e_dataset):
         img_n_fake = generate_fake(img_e, c_n_real, models_s, transform)
         file_name = f"{index}_n.png"
         file_name = eval_dir_n + "/" + file_name
-        print(f"E to N [{index + 1}/{n_e}], save file {file_name}.")
+        # print(f"E to N [{index + 1}/{n_e}], save file {file_name}.")
+        pbar.update(1)
         save_image(file_name, img_n_fake)
+
+    assert n_e == len(img_files(eval_dir_n))
 
 
 def generate_eval_e_z(source_data_dir, eval_dir, models_s, transform, config):
@@ -72,17 +77,22 @@ def generate_eval_e_z(source_data_dir, eval_dir, models_s, transform, config):
     eval_dir_e_z = eval_dir + "/b_e_z"
     Utils.recreate_dir(eval_dir_e_z)
     mul = math.ceil(n_e / n_n)
+    total_count = mul * n_n
+    print(f"generate_eval_e_z:")
+    pbar = tqdm(total=total_count)
     for m in range(mul):
-        for index, (img_n, id, c) in enumerate(n_dataset):
+        for index, (img_n, id, c, full_name_n) in enumerate(n_dataset):
             c = Utils.generate_rand_code(1, config)
             img_e_fake = generate_fake(img_n, c, models_s, transform)
             index_e = m * n_n + index
             file_name = f"{index_e}_e.png"
             file_name = eval_dir_e_z + "/" + file_name
-            print(f"N to E by z [{m * n_n + index}/{mul * n_n}], save file {file_name}.")
+            count = m * n_n + index
+            # print(f"N to E by z [{count}/{total_count}], save file {file_name}.")
+            pbar.update(1)
             save_image(file_name, img_e_fake)
 
-    print(f"generate_eval() all done!")
+    assert total_count == len(img_files(eval_dir_e_z))
 
 
 def generate_eval_e_r(source_data_dir, eval_dir, num_each_cls, models_s, transform, config):
@@ -104,33 +114,37 @@ def generate_eval_e_r(source_data_dir, eval_dir, num_each_cls, models_s, transfo
     Utils.recreate_dir(eval_dir_e_r)
     num_each_cls = num_each_cls
     count = 0
-    for index, (img_n, id, cls_n) in enumerate(n_dataset):
+    total = n_n * num_cls * num_each_cls
+    print(f"generate_eval_e_r:")
+    pbar = tqdm(total=total)
+    for index, (img_n, id, cls_n, full_name_n) in enumerate(n_dataset):
         for cls, img_indexes in cls_index_map.items():
             num_each = min(num_each_cls, len(img_indexes))
             total = n_n * num_cls * num_each
             img_indexes = random.sample(img_indexes, num_each)
             for img_index in img_indexes:
                 # print(f"imgs_index:{imgs_index}")
-                img_e, id_r, cls_r = e_dataset[img_index]
+                img_e, id_r, cls_r, full_name_e = e_dataset[img_index]
                 c_e = models_s.encoder(torch.unsqueeze(img_e, dim=0))
                 img_e_fake = generate_fake(img_n, c_e, models_s, transform)
-                file_name = f"{id}_{id_r}_{cls_r}.png"
+                file_name = f"{full_name_n}_{full_name_e}.png"
                 file_name = eval_dir_e_r + "/" + file_name
                 count += 1
-                print(f"N to E by reference [{count}/{total}], save file {file_name}.")
+                pbar.update(1)
+                # print(f"N to E by reference [{count}/{total}], save file {file_name}.")
                 save_image(file_name, img_e_fake)
 
     assert count == len(img_files(eval_dir_e_r))
 
 
-def generate_eval(root_dir, eval_dir,num_each_cls, models_s, transform, config):
+def generate_eval(root_dir, eval_dir, num_each_cls, models_s, transform, config):
     generate_eval_n(root_dir, eval_dir, models_s, transform, config)
     generate_eval_e_z(root_dir, eval_dir, models_s, transform, config)
-    generate_eval_e_r(root_dir, eval_dir,num_each_cls, models_s, transform, config)
-    print(f"generate_eval() all done!")
+    generate_eval_e_r(root_dir, eval_dir, num_each_cls, models_s, transform, config)
+    print(f"generate_eval({root_dir}) all done!")
 
 
 def generate_eval_data(num_each_cls, models_s, transform, config):
     Utils.recreate_dir(config.eval_dir)
-    generate_eval(config.test_dir, config.eval_dir + "/test",num_each_cls, models_s, transform, config)
-    generate_eval(config.train_dir, config.eval_dir + "/train",num_each_cls, models_s, transform, config)
+    generate_eval(config.test_dir, config.eval_dir + "/test", num_each_cls, models_s, transform, config)
+    generate_eval(config.train_dir, config.eval_dir + "/train", num_each_cls, models_s, transform, config)

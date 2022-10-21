@@ -10,6 +10,11 @@ import torch
 import Utils
 from PIL import Image
 
+from Model import create_model
+from Utils import load_model
+from main import get_config
+from torch import FloatTensor
+
 #
 # Load IRIS dataset
 #
@@ -24,7 +29,7 @@ print(X.shape)
 
 # fig, ax = plt.subplots()
 # i = 3
-# km = KMeans(n_clusters=i, init='k-means++', n_init=10, max_iter=100, random_state=42)
+# km = KMeans(n_clusters=i, not_grey_init='k-means++', n_init=10, max_iter=100, random_state=42)
 # q, mod = divmod(i, 2)
 # visualizer = SilhouetteVisualizer(km, colors='yellowbrick', ax=ax)
 # visualizer.fit(X)

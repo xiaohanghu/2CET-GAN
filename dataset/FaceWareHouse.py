@@ -16,7 +16,7 @@ from torchvision.datasets import ImageFolder
 
 from dataset.DataUtils import recreate_dir
 
-root_dir = "/Users/xiaohanghu/Documents/Repositories/dataset"
+root_dir = "/Users/xiaohanghu/Documents/Repositories/data"
 source_dir = root_dir + "/FaceWarehouse/FaceWarehouse_Data"
 output_dir = root_dir + "/expression_1.0"
 

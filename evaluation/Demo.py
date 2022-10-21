@@ -225,15 +225,11 @@ def merge_image():
     # img1[128*3:]
 
 
-def generate_demo_matrix():
-    # 2.8.8
-    config = get_config_(eval_model_step=60000)
+def generate_demo_matrix(config, es, rs, name):
     _, sample_getter_test = create_sample_getter(config)
 
     transform = create_transform_test(config)
 
-    es = ["130_09", "294_03", "392_07", "363_21", "357_10", "181_11"]
-    rs = ["123_02", "115_05", "113_16"]
     rs = rs[:4]
     print(f"len:{len(rs)}")
     x_es = get_images(config.train_dir, es, transform, False)
@@ -256,7 +252,7 @@ def generate_demo_matrix():
 
     x_es_RGB = Utils.denormalize_RGB(x_es)
     x_es_RGB = Utils.resize_imgs(x_es_RGB, 2)
-    Utils.save_image_RGB(x_es_RGB, len(x_es_RGB), "demo_matrix_target.png")
+    Utils.save_image_RGB(x_es_RGB, len(x_es_RGB), f"output/demo_matrix_{name}_target.png")
     for c, x_n in enumerate(x_es_RGB.numpy()):
         row = 0
         col = c + 1
@@ -265,7 +261,7 @@ def generate_demo_matrix():
 
     x_e_rs_RGB = Utils.denormalize_RGB(x_e_rs)
     x_e_rs_RGB = Utils.resize_imgs(x_e_rs_RGB, 2)
-    Utils.save_image_RGB(x_e_rs_RGB, 1, "demo_matrix_reference.png")
+    Utils.save_image_RGB(x_e_rs_RGB, 1, f"output/demo_matrix_{name}_reference.png")
     for r, x_e in enumerate(x_e_rs_RGB.numpy()):
         row = r + 1
         col = 0
@@ -292,16 +288,50 @@ def generate_demo_matrix():
     output = output.flatten(start_dim=0, end_dim=1)
     # output = Utils.resize_imgs(output, 2)
     print(output.shape)
-    Utils.save_image_RGB(output, len(es), "demo_matrix_output.png")
+    Utils.save_image_RGB(output, len(es), f"output/demo_matrix_{name}_output.png")
 
     # for
     # models_s.generator(x_ns)
     im = Image.fromarray(result)
-    im.save("demo_matrix.png", format=None)
+    im.save(f"output/demo_matrix_{name}.png", format=None)
+    print(f"Save to : output/demo_matrix_{name}.png")
+
+
+def generate_demo_matrix_RafD():
+    # 2.8.8.2
+    es = ["01_135_2_08", "64_90_1_09", "70_45_1_07",
+          ]
+    rs = ["23_135_0_02", "14_90_2_06", "63_45_1_05"]
+    config = get_config_(eval_model_step=100000)
+    config.train_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/train"
+    config.test_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/test"
+    config.models_dir = config.models_dir + "/RafD"
+    generate_demo_matrix(config, es, rs, "RafD")
+
+
+def generate_demo_matrix_CFEE():
+    # 2.8.8.2
+    # es = ["392_07", "114_09", "134_03",
+    #       "277_10",
+    #       # "209_10",
+    #       # "266_10",
+    #       # "361_10",
+    #       # "376_10",
+    #       # "183_10",
+    #       "363_21",
+    #       "181_11",
+    #       ]
+    es = ["130_11", "134_19", "363_09",
+          # "181_11",
+          ]
+    rs = ["392_02", "110_16", "209_05"]
+    config = get_config_(eval_model_step=60000)
+    config.models_dir = config.models_dir
+    generate_demo_matrix(config, es, rs, "CFEE")
 
 
 def cut_demo_matrix():
-    img = Image.open("demo_matrix_0.png")
+    img = Image.open("output/demo_matrix_0.png")
     print(img.size)
     img1 = np.asarray(img)
     print(img1.min())
@@ -319,7 +349,7 @@ def cut_demo_matrix():
 
 
 def cut_structure():
-    img = Image.open("structure_0.png")
+    img = Image.open("output/structure_0.png")
     print(img.size)
     img1 = np.asarray(img.convert('RGB'))
     l = 238
@@ -329,7 +359,7 @@ def cut_structure():
 
 
 def cut_demo_compare():
-    img = Image.open("demo_compare_0.png")
+    img = Image.open("output/demo_compare_0.png")
     print(img.size)
     img1 = np.asarray(img.convert('RGB'))
     l = 355
@@ -342,7 +372,7 @@ def cut_demo_compare():
 
 
 def cut_demo_compare_00():
-    img = Image.open("demo_compare_00.png")
+    img = Image.open("output/demo_compare_00.png")
     print(img.size)
     img1 = np.asarray(img.convert('RGB'))
     l = 355
@@ -355,27 +385,28 @@ def cut_demo_compare_00():
 
 
 def cut_demo_compare_test():
-    img = Image.open("demo_compare_test_0.png")
+    img = Image.open("output/demo_compare_test_0.png")
     print(img.size)
     img1 = np.asarray(img.convert('RGB'))
-    l = 181
+    l = 210
     t = 158
     h = 828
-    w = 2175
+    w = 2146
     result = img1[t:t + h, l:l + w, :]
     im = Image.fromarray(result)
-    im.save("demo_compare_test_1.png", format=None)
+    im.save("output/demo_compare_test_1.png", format=None)
 
 
 if __name__ == '__main__':
-    generate_demo()
+    # generate_demo()
     # generate_demo_ENE()
     # generate_demo_test()
     # generate_demo_CFE()
     # merge_image()
-    # generate_demo_matrix()
+    # generate_demo_matrix_RafD()
+    # generate_demo_matrix_CFEE()
     # cut_demo_matrix()
     # cut_structure()
     # cut_demo_compare()
     # cut_demo_compare_00()
-    # cut_demo_compare_test()
+    cut_demo_compare_test()

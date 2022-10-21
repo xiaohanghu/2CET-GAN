@@ -4,7 +4,7 @@
 
 2 cycles expression transfer GAN (2CET-GAN) is a Pixel to Pixel Human Facial Expression Transfer GAN.
 This is a pytorch implementation.
-<p ><img width="95%" src="evaluation/output/demo_matrix_1.png" /></p>
+<p ><img width="95%" src="evaluation/output/demo_matrix_21.png" /></p>
 
 ## Demo
 Compare with StarGAN v2:
@@ -65,3 +65,5 @@ python main.py \
 ```
 
 ##  Pretrained model
+
+https://drive.google.com/drive/folders/1Qih5ecl5KU5IPApZKe5P7lURtutCZpR_

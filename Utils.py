@@ -111,22 +111,24 @@ def get_neutral_code(n_sample, dtype, config):
     return c
 
 
-CODE_MIN = -0.5
-CODE_MAX = 0.5
-# CODE_DIFF_EXP = (CODE_MAX - CODE_MIN) / 3.  # code diff expectation
-CODE_DIFF_EXP_FRACTION = 3 / (CODE_MAX - CODE_MIN)
+# CODE_MIN = -0.5
+# CODE_MAX = 0.5
+# # CODE_DIFF_EXP = (CODE_MAX - CODE_MIN) / 3.  # code diff expectation
+# CODE_DIFF_EXP_FRACTION = 3 / (CODE_MAX - CODE_MIN)
 
 
 def generate_rand_code(n_sample, config):
-    # c = torch.normal(0, 0.5, size=(n_sample, config.code_dim)) \
-    #     .to(config.device)
-
-    # std = sqrt( (1+1)**2/12 ) = 0.5773
-    # std = sqrt( (0.5+0.5)**2/12 ) = 0.288675
-    c = FloatTensor(np.random.uniform(CODE_MIN, CODE_MAX, (n_sample, config.code_dim)))
-    # std = sqrt( (0.25+0.25)**2/12 ) = 0.144
-    # c = FloatTensor(np.random.uniform(-0.25, 0.25, (n_sample, config.code_dim)))
-    c = c.to(config.device)
+    if config.code_distribution == "normal":
+        c = torch.normal(0, config.code_max, size=(n_sample, config.code_dim)) \
+            .to(config.device)
+    else:
+        # std = sqrt( (1+1)**2/12 ) = 0.5773
+        # std = sqrt( (0.5+0.5)**2/12 ) = 0.288675
+        # std = sqrt( (0.2+0.2)**2/12 ) = 0.1154
+        c = FloatTensor(np.random.uniform(config.code_min, config.code_max, (n_sample, config.code_dim)))
+        # std = sqrt( (0.25+0.25)**2/12 ) = 0.144
+        # c = FloatTensor(np.random.uniform(-0.25, 0.25, (n_sample, config.code_dim)))
+        c = c.to(config.device)
 
     return c
 
@@ -317,6 +319,43 @@ def get_model_filename(model_name, step):
     return f"{step:06d}_{model_name}.ckpt"
 
 
+def get_step(file_name):
+    if file_name.endswith(".ckpt"):
+        return int(file_name.split("_")[0])
+    return None
+
+
+def get_max_step(models_dir):
+    max_step = 0
+    for file in os.listdir(models_dir):
+        if file.endswith("model.ckpt"):
+            step = get_step(file)
+            max_step = max(max_step, step)
+    return max_step
+
+
+def delete_model_(models_dir, model_name, step):
+    fname = os.path.join(models_dir, get_model_filename(model_name, step))
+    if os.path.exists(fname):
+        os.remove(os.path.join(models_dir, fname))
+
+
+def delete_model(models_dir, step):
+    delete_model_(models_dir, "model", step)
+    delete_model_(models_dir, "model_s", step)
+    delete_model_(models_dir, "optims", step)
+
+
+def should_save(step, save_every):
+    return step == 1 or (step % save_every == 0)
+
+
+def delete_model_backup(models_dir, del_step, save_every):
+    if should_save(del_step, save_every):
+        return
+    delete_model(models_dir, del_step)  # only keep last one
+
+
 def save_model(config, model, model_name, parallel, step):
     os.makedirs(os.path.dirname(config.models_dir), exist_ok=True)
     fname = get_model_filename(model_name, step)
@@ -373,9 +412,9 @@ def load_model_all(config, model, model_s, optims, step):
 
 
 def losses_average(losses_avg, losses, alpha=0.02):
-    """
+    '''
     exponential weighted moving average
-    """
+    '''
     for name, value_new in losses.items():
         if value_new is None:
             continue
@@ -388,10 +427,12 @@ def losses_average(losses_avg, losses, alpha=0.02):
         losses_avg[name] = (1 - alpha) * value_avg + alpha * value_new
 
 
-def losses_to_str(losses):
+def losses_to_str(losses, keys=None):
     strs = []
     # for key in sorted(losses.keys()):
     for key in losses.keys():
+        if keys is not None and key not in keys:
+            continue
         value = losses[key]
         if value is None:
             continue
@@ -405,7 +446,10 @@ def losses_to_str(losses):
 def generate_log(step, timer, d_losses_avg, g_losses_avg, config):
     log = f"[{step}/{config.total_iter}] takes: {timer.takes()}, avg: {timer.avg_cost():.2f} sec, expect finish in: {timer.expect()}."
     log += f"\r\n D loss ---- " + losses_to_str(d_losses_avg)
-    log += f"\r\n G loss ---- " + losses_to_str(g_losses_avg)
+    code_keys = {"c_e_r_mean", "c_e_r_abs_mean", "c_e_r_abs_max", "c_e_x_mean", "c_e_x_abs_mean", "c_e_x_abs_max"}
+    g_keys = set(g_losses_avg.keys()) - code_keys
+    log += f"\r\n G loss ---- " + losses_to_str(g_losses_avg, g_keys)
+    log += f"\r\n Code sts -- " + losses_to_str(g_losses_avg, code_keys)
     # log += f"\r\n E info ---- " + losses_to_str(e_losses_avg)
     return log
 
@@ -440,5 +484,22 @@ def calculate_lambda(current_step, start_step, end_step, start_v, end_v):
         return end_v
     return start_v + (end_v - start_v) * (current_step - start_step) / (end_step - start_step)
 
+
+def code_distribution(code):
+    c_mean = torch.mean(code, dim=0).detach()
+    c_abs = torch.abs(code).detach()
+
+    c_mean = torch.mean(c_mean).item()
+    c_abs_mean = torch.mean(c_abs).item()
+    c_abs_max = torch.max(c_abs).item()
+    return c_mean, c_abs_mean, c_abs_max
+
 # import math
-# print(math.sqrt( (0.25+0.25)**2/12 ))
+# print(math.sqrt((0.20 + 0.20) ** 2 / 12))
+# code_range="[-0.2,0.2]"
+# code_min,code_max = code_range[1:-1].split(',')
+# print(float(code_min))
+# print(float(code_max))
+
+# print(145000*30)
+# print(145000*30/5743)

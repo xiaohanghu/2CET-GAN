@@ -3,7 +3,7 @@
 Copyright (c) 2022-present, Xiaohang Hu.
 This work is licensed under the MIT License.
 """
-
+import Utils
 from DataLoader import create_sample_getter
 from Model import *
 from Utils import *
@@ -136,20 +136,22 @@ def loss_GE_NEN(model, config, sample):
         #     c_e_2 = encode(model.encoder, sample.x_e_2, config)
         x_fake_e_2 = model.generator(x_n, c_e_2)
         x_fake_e_2 = x_fake_e_2.detach()
-        c_e_diff = torch.abs(c_e_2.detach() - c_e.detach())
-        c_e_diff = c_e_diff.view(c_e_diff.size(0), -1).mean(dim=1)
-        c_e_diff = c_e_diff.mul(CODE_DIFF_EXP_FRACTION)  # scale to 1
 
         loss_ds_e_each = (torch.abs(x_fake_e - x_fake_e_2))
         loss_ds_e_each = loss_ds_e_each.view(loss_ds_e_each.size(0), -1).mean(dim=1)
-        loss_ds_e = - torch.mean(c_e_diff * loss_ds_e_each)
+
+        if config.proportional_ds_e:
+            c_e_diff = torch.abs(c_e_2.detach() - c_e.detach())
+            c_e_diff = c_e_diff.view(c_e_diff.size(0), -1).mean(dim=1)
+            c_e_diff = c_e_diff.mul(config.code_diff_exp_fraction)  # scale to 1
+            loss_ds_e = - torch.mean(c_e_diff * loss_ds_e_each)
+        else:
+            loss_ds_e = - torch.mean(loss_ds_e_each)
 
     # encoder must be able to extract same rand_code from x_fake_e
     # generator must contain full expression information
     c_e_fake = encode(model.encoder, x_fake_e, config)
-    c_e_r_std, c_e_r_m = torch.std_mean(c_e_fake, dim=0)
-    c_e_r_std = torch.mean(c_e_r_std.detach()).item()
-    c_e_r_m = torch.mean(c_e_r_m.detach()).item()
+    c_e_r_mean, c_e_r_abs_mean, c_e_r_abs_max = Utils.code_distribution(c_e_fake)
     loss_c_e = torch.mean(torch.abs(c_e_fake - c_e))
     # loss_c_e = F.mse_loss(c_e_fake - c_e) weaker than L1
 
@@ -174,9 +176,9 @@ def loss_GE_NEN(model, config, sample):
         # cyc_e=loss_cyc_e.item(),
         c_e=loss_c_e,
         ds_e=loss_ds_e,
-        c_e_r_m=c_e_r_m,
-        c_e_r_std=c_e_r_std,
-        # c_e_std_r=c_e_std_r
+        c_e_r_mean=c_e_r_mean,
+        c_e_r_abs_mean=c_e_r_abs_mean,
+        c_e_r_abs_max=c_e_r_abs_max,
     )
 
 
@@ -195,8 +197,7 @@ def loss_GE_ENE(model, config, sample):
     loss_adv_n = adv_loss(adv_out_n, 1)
 
     c_e = encode(model.encoder, x_e, config)
-    c_e_x_std, c_e_r_m = torch.std_mean(c_e, dim=0)
-    c_e_x_std = torch.mean(c_e_x_std.detach()).item()
+    c_e_x_mean, c_e_x_abs_mean, c_e_x_abs_max = Utils.code_distribution(c_e)
 
     x_e_back = model.generator(x_fake_n, c_e)
     loss_cyc_e = torch.mean(torch.abs(x_e_back - x_e))
@@ -206,7 +207,9 @@ def loss_GE_ENE(model, config, sample):
     return loss, Munch(
         adv_n=loss_adv_n.item(),
         cyc_e=loss_cyc_e.item(),
-        c_e_x_std=c_e_x_std,
+        c_e_x_mean=c_e_x_mean,
+        c_e_x_abs_mean=c_e_x_abs_mean,
+        c_e_x_abs_max=c_e_x_abs_max,
     )
 
 
@@ -270,6 +273,9 @@ def train(config):
         config.total_iter = 1
     print("Start training...")
 
+    if config.resume_iter == -1:
+        config.resume_iter = Utils.get_max_step(config.models_dir)
+
     if config.resume_iter > 0:
         load_model_all(config, model, model_s, optims, config.resume_iter)
 
@@ -286,6 +292,8 @@ def train(config):
     config.lambda_cyc_e = calculate_lambda(config.resume_iter, *lambda_cyc_e_config)
     print(f"lambda_cyc_e:{config.lambda_cyc_e}")
 
+    backup_every = 500
+
     # for computing the average of the loss for logging
     d_losses_avg = Munch(real_n=None,
                          real_e=None,
@@ -301,9 +309,12 @@ def train(config):
                          cyc_e=None,
                          c_e=None,
                          ds_e=None,
-                         c_e_r_m=None,
-                         c_e_r_std=None,
-                         c_e_x_std=None,
+                         c_e_r_mean=None,
+                         c_e_r_abs_mean=None,
+                         c_e_r_abs_max=None,
+                         c_e_x_mean=None,
+                         c_e_x_abs_mean=None,
+                         c_e_x_abs_max=None,
                          )
     for step in range(config.resume_iter + 1, config.total_iter + 1):
         config.step = step
@@ -334,7 +345,7 @@ def train(config):
         timer.increase()
         if config.test or (step == 1) or (step % config.log_every == 0):
             log = generate_log(step, timer, d_losses_avg, g_losses_avg, config)
-            print(log)
+            config.logger.log(log)
 
         # generate sample images
         if (step == 1) or (step % config.output_every == 0):
@@ -345,8 +356,13 @@ def train(config):
             generate_output_test(model_s, config, step, sample_getter_test)
 
         # save models
-        if (step == 1) or step % config.save_every == 0:
+        should_backup = step % backup_every == 0
+        if Utils.should_save(step, config.save_every) or should_backup:
             save_model_all(config, model, model_s, optims, step)
+        if should_backup:
+            del_step = step - backup_every  # only keep last backup
+            Utils.delete_model_backup(config.models_dir, del_step, config.save_every)
+
         if config.test:
             save_model_all(config, model, model_s, optims, step)
             load_model_all(config, model, model_s, optims, step)

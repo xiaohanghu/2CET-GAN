@@ -53,17 +53,19 @@ def process_and_save_img(file, path, output_dir):
     clas = int(class_name)
     # cv2.imwrite(output_dir+file, img)
     # break
-    class_dir = 'a_n'
-    if clas != 1:
-        class_dir = 'b_e'
-    dir = output_dir + "/" + class_dir
-    DataUtils.create_dir(dir, overwrite=False)
-    file_full = dir + "/" + id + "_" + class_name + ".png"
-    # print(f"Save image [{file_full}]")
-    if os.path.exists(file_full):
-        # raise Exception(f"File [{file_full}] exists!")
-        print(f"File [{file_full}] exists!")
-    cv2.imwrite(file_full, img)
+    class_dirs = ['b_e']  # all images will put in b_e. We think a neutral face is also an expression
+    if clas == 1:
+        class_dirs.append('a_n')
+
+    for class_dir in class_dirs:
+        dir = output_dir + "/" + class_dir
+        DataUtils.create_dir(dir, overwrite=False)
+        file_full = dir + "/" + id + "_" + class_name + ".png"
+        # print(f"Save image [{file_full}]")
+        if os.path.exists(file_full):
+            # raise Exception(f"File [{file_full}] exists!")
+            print(f"File [{file_full}] exists!")
+        cv2.imwrite(file_full, img)
     return id, class_name
 
 
@@ -153,15 +155,18 @@ output_dir = root_dir + "/expression_CFEE"
 # check_pairs(root_dir + "/expression_CFEE_p_128")
 
 ###################################### by each class
-
+ids_test_V2 = ["122", "174", "185", "224", "272", "188", "187", "265", "378", "365", "369", "268", "235", "284", "304",
+               "118"]
 # DataUtils.split_by_class(root_dir + "/expression_CFEE", root_dir + "/expression_CFEE_cls")
 # DataUtils.split_data(root_dir + "/expression_CFEE", root_dir + "/expression_CFEE_id_256", ids_test=["122", "174", "185", "224", "272", "188", "187", "265"])
+DataUtils.split_data(root_dir + "/expression_CFEE", root_dir + "/expression_CFEE_id_256_V2", ids_test=ids_test_V2)
 # DataUtils.split_data(root_dir + "/expression_CFEE_cls", root_dir + "/expression_CFEE_id_cls_256", ids_test=["122", "174", "185", "224", "272", "188", "187", "265"])
 # DataUtils.split_data(root_dir + "/expression_CFEE_cls", root_dir + "/expression_CFEE_cls_256")
+DataUtils.rszie_images(root_dir + "/expression_CFEE_id_256_V2", root_dir + "/expression_CFEE_id_128_V2", (128, 128))
 # DataUtils.rszie_images(root_dir + "/expression_CFEE_cls_1.0", root_dir + "/expression_CFEE_cls_128", (128, 128))
 # DataUtils.rszie_images(root_dir + "/expression_CFEE_id_cls_256", root_dir + "/expression_CFEE_id_cls_128", (128, 128))
 # identity_count, img_count = extract_images(source_dir, output_dir, by_each_class=True)
 # print(f"Done! people:{identity_count}, img_count:{img_count}")
 # people:230, img_count:5954
 
-DataUtils.delete_by_identity(root_dir + "/expression_CFEE_id_diff_128/train")
+# DataUtils.delete_by_identity(root_dir + "/expression_CFEE_id_diff_128/train")

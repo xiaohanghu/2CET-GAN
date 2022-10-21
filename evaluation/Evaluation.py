@@ -19,9 +19,9 @@ from munch import Munch
 def get_models(config, step):
     models, models_s = create_model(config)
     # load_models(config, models, "models", True, step)
-    models_name = "models_s"
+    models_name = "model_s"
     if not model_exist(config, models_name, step):
-        return None
+        raise Exception(f'Model [{models_name}:{step}] dose not exist!')
     load_model(config, models_s, models_name, True, step)
     del models
     return models_s
@@ -41,7 +41,7 @@ def evaluate_encoder(source_data_dir, models_s, transform):
         result.append(result_cls)
         print(f"Start to calculate class [{cls}].")
         for img_index in img_indexes:
-            img_e, _, _ = e_dataset[img_index]
+            img_e, _, _, _ = e_dataset[img_index]
             c_e = models_s.encoder(torch.unsqueeze(img_e, dim=0))
             c_e_s.append(c_e.cpu().detach().numpy()[0])
         c_e_s = np.array(c_e_s)
@@ -68,10 +68,15 @@ def evaluate_encoder(source_data_dir, models_s, transform):
     return result
 
 
+def append_report(report, text):
+    report += "\r\n"
+    report += text
+    return report
+
+
 def evaluate(config):
     models_s = get_models(config, config.eval_model_step)
     transform = create_transform_test(config)
-
     if config.eval_generate_data:
         num_each_cls = 3
         generate_eval_data(num_each_cls, models_s, transform, config)
@@ -110,48 +115,54 @@ def evaluate(config):
         config.eval_dir + "/train/b_e_z",
         config)
 
-    print(f"------------------------------------------------------------------------")
-    print(f"REPORT")
-    print("FID--------------------------------")
-    print(f"FID on test dataset: fid_n={matrix.fid_n:.1f}, fid_e_z={matrix.fid_e_z:.1f}, fid_e_r={matrix.fid_e_r:.1f}")
-    print(
-        f"FID on train dataset: fid_n={matrix.fid_n_1:.1f}, fid_e_z={matrix.fid_e_z_1:.1f}, fid_e_r={matrix.fid_e_r_1:.1f}")
+    report = "\r\n------------------------------------------------------------------------"
+    report = append_report(report, f"REPORT")
+    report = append_report(report, "FID--------------------------------")
+    report = append_report(report,
+                           f"FID on test dataset: fid_n={matrix.fid_n:.1f}, fid_e_z={matrix.fid_e_z:.1f}, fid_e_r={matrix.fid_e_r:.1f}")
+    report = append_report(report,
+                           f"FID on train dataset: fid_n={matrix.fid_n_1:.1f}, fid_e_z={matrix.fid_e_z_1:.1f}, fid_e_r={matrix.fid_e_r_1:.1f}")
 
-    print(f"FID on train dataset by class:")
+    report = append_report(report, f"FID on train dataset by class:")
     for cls, fid in matrix.cls_fids.items():
-        print(f"  Class:{cls}, fid:{fid:.1f}")
+        report = append_report(report, f"  Class:{cls}, fid:{fid:.1f}")
 
-    print("")
-    print("Encoder--------------------------------")
-    print(f"Encoder on test dataset:")
+    report = append_report(report, "")
+    report = append_report(report, "Encoder--------------------------------")
+    report = append_report(report, f"Encoder on test dataset:")
     for result_cls in matrix.encoder_figures_test:
-        print(
-            f"  Class:{result_cls.cls}, std between code: {result_cls.std_by_c:.5f}, std in code: {result_cls.std_by_r:.5f}, mean:{result_cls.mean:.5f}")
+        report = append_report(report,
+                               f"  Class:{result_cls.cls}, std between code: {result_cls.std_by_c:.5f}, std in code: {result_cls.std_by_r:.5f}, mean:{result_cls.mean:.5f}")
 
-    print(f"Encoder on train dataset:")
+    report = append_report(report, f"Encoder on train dataset:")
     for result_cls in matrix.encoder_figures_train:
-        print(
-            f"  Class:{result_cls.cls}, std between code: {result_cls.std_by_c:.5f}, std in code: {result_cls.std_by_r:.5f}, mean:{result_cls.mean:.5f}")
+        report = append_report(report,
+                               f"  Class:{result_cls.cls}, std between code: {result_cls.std_by_c:.5f}, std in code: {result_cls.std_by_r:.5f}, mean:{result_cls.mean:.5f}")
 
-    print("")
-    print("IS--------------------------------")
-    print(f"is_test_n_mean:{matrix.is_test_n_mean:.2f}, is_test_n_is_std:{matrix.is_test_n_std:.2f}")
-    print(f"is_test_e_mean:{matrix.is_test_e_mean:.2f}, is_test_e_is_std:{matrix.is_test_e_std:.2f}")
-    print(
-        f"is_eval_test_n_mean:{matrix.is_eval_test_n_mean:.2f}, is_eval_test_n_is_std:{matrix.is_eval_test_n_std:.2f}")
-    print(
-        f"is_eval_test_e_r_mean:{matrix.is_eval_test_e_r_mean:.2f}, is_eval_test_e_r_is_std:{matrix.is_eval_test_e_r_std:.2f}")
-    print(
-        f"is_eval_test_e_z_mean:{matrix.is_eval_test_e_z_mean:.2f}, is_eval_test_e_z_is_std:{matrix.is_eval_test_e_z_std:.2f}")
-    print()
-    print(f"is_train_n_mean:{matrix.is_train_n_mean:.2f}, is_train_n_is_std:{matrix.is_train_n_std:.2f}")
-    print(f"is_train_e_mean:{matrix.is_train_e_mean:.2f}, is_train_e_is_std:{matrix.is_train_e_std:.2f}")
-    print(
-        f"is_eval_train_n_mean:{matrix.is_eval_train_n_mean:.2f}, is_eval_train_n_is_std:{matrix.is_eval_train_n_std:.2f}")
-    print(
-        f"is_eval_train_e_r_mean:{matrix.is_eval_train_e_r_mean:.2f}, is_eval_train_e_r_is_std:{matrix.is_eval_train_e_r_std:.2f}")
-    print(
-        f"is_eval_train_e_z_mean:{matrix.is_eval_train_e_z_mean:.2f}, is_eval_train_e_z_is_std:{matrix.is_eval_train_e_z_std:.2f}")
+    report = append_report(report, "")
+    report = append_report(report, "IS--------------------------------")
+    report = append_report(report,
+                           f"is_test_n_mean:{matrix.is_test_n_mean:.2f}, is_test_n_is_std:{matrix.is_test_n_std:.2f}")
+    report = append_report(report,
+                           f"is_test_e_mean:{matrix.is_test_e_mean:.2f}, is_test_e_is_std:{matrix.is_test_e_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_test_n_mean:{matrix.is_eval_test_n_mean:.2f}, is_eval_test_n_is_std:{matrix.is_eval_test_n_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_test_e_r_mean:{matrix.is_eval_test_e_r_mean:.2f}, is_eval_test_e_r_is_std:{matrix.is_eval_test_e_r_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_test_e_z_mean:{matrix.is_eval_test_e_z_mean:.2f}, is_eval_test_e_z_is_std:{matrix.is_eval_test_e_z_std:.2f}")
+    report = append_report(report, "")
+    report = append_report(report,
+                           f"is_train_n_mean:{matrix.is_train_n_mean:.2f}, is_train_n_is_std:{matrix.is_train_n_std:.2f}")
+    report = append_report(report,
+                           f"is_train_e_mean:{matrix.is_train_e_mean:.2f}, is_train_e_is_std:{matrix.is_train_e_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_train_n_mean:{matrix.is_eval_train_n_mean:.2f}, is_eval_train_n_is_std:{matrix.is_eval_train_n_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_train_e_r_mean:{matrix.is_eval_train_e_r_mean:.2f}, is_eval_train_e_r_is_std:{matrix.is_eval_train_e_r_std:.2f}")
+    report = append_report(report,
+                           f"is_eval_train_e_z_mean:{matrix.is_eval_train_e_z_mean:.2f}, is_eval_train_e_z_is_std:{matrix.is_eval_train_e_z_std:.2f}")
+    config.logger_eval.log(report)
 
 
 def evaluate_all(config):
@@ -181,12 +192,13 @@ def evaluate_all(config):
                                                                                config.eval_dir + "/train",
                                                                                config,
                                                                                batch_size=50)
-        print(
-            f"step {config.eval_model_step}:")
-        print(
-            f"  On test: fid_n={matrix.fid_n:.1f}, fid_e_z={matrix.fid_e_z:.1f}, fid_e_r={matrix.fid_e_r:.1f}")
-        print(
-            f"  On train: fid_n={matrix.fid_n_1:.1f}, fid_e_z={matrix.fid_e_z_1:.1f}, fid_e_r={matrix.fid_e_r_1:.1f}")
+        report = "\r\n------------------------------------------------------------------------"
+        report = append_report(report,
+                               f"step {config.eval_model_step}:")
+        report = append_report(report,
+                               f"  On test: fid_n={matrix.fid_n:.1f}, fid_e_z={matrix.fid_e_z:.1f}, fid_e_r={matrix.fid_e_r:.1f}")
+        report = append_report(report,
+                               f"  On train: fid_n={matrix.fid_n_1:.1f}, fid_e_z={matrix.fid_e_z_1:.1f}, fid_e_r={matrix.fid_e_r_1:.1f}")
 
         fid_e_z_test.append(matrix.fid_e_z)
         fid_e_z_train.append(matrix.fid_e_z_1)
@@ -196,7 +208,8 @@ def evaluate_all(config):
 
         config.eval_model_step = config.eval_model_step + save_every
 
-    print(f"fid_e_z_test = {fid_e_z_test}")
-    print(f"fid_e_z_train = {fid_e_z_train}")
-    print(f"fid_e_r_test = {fid_e_r_test}")
-    print(f"fid_e_r_train = {fid_e_r_train}")
+    report = append_report(report, f"fid_e_z_test = {np.around(fid_e_z_test, 1)}")
+    report = append_report(report, f"fid_e_z_train = {np.around(fid_e_z_train, 1)}")
+    report = append_report(report, f"fid_e_r_test = {np.around(fid_e_r_test, 1)}")
+    report = append_report(report, f"fid_e_r_train = {np.around(fid_e_r_train, 1)}")
+    config.logger_eval.log(report)

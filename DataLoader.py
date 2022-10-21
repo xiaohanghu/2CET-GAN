@@ -66,13 +66,15 @@ class SingleFolderDataset(data.Dataset):
 
     def getitem(self, index, return_img=True):
         file = self.samples[index]
-        id, cls = parse_file_name(file)
+        full_name = file.rsplit('/', 1)[-1]
+        full_name = full_name.replace(".png", "")
+        id, cls = parse_file_name(full_name)
         if not return_img:
             return id, cls
         img = Image.open(file).convert('RGB')
         if self.transform is not None:
             img = self.transform(img)
-        return img, id, cls
+        return img, id, cls, full_name
 
     def get_cls_index_map(self):
         n_e = self.__len__()
@@ -351,7 +353,7 @@ def create_sample_getter(config):
     print(
         f"number of samples: n = {config.sample_num_n}, e={config.sample_num_e}, n/e={config.sample_n_ratio:.4f}")
 
-    print("Create dataset loader.")
+    print("Create data loader.")
     sample_getter_train = SampleGetter(config, train_loader_n, train_loader_e)
 
     train_loader_n_test = create_data_loader_test(config, "a_n", )

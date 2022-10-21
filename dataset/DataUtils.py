@@ -53,9 +53,9 @@ def parse_file_name(filename):
 
 
 def split_data(source_dir, target_dir, ids_test=None, test_proportion=0.05):
-    """
-    Split dataset into train and test folder
-    """
+    '''
+    Split data into train and test folder
+    '''
     class_dirs = get_subdirs(source_dir)
     target_train_dir = target_dir + "/train"
     target_test_dir = target_dir + "/test"
@@ -77,7 +77,7 @@ def split_data(source_dir, target_dir, ids_test=None, test_proportion=0.05):
             is_train_set = True
             if ids_test is not None:
                 image_file_name.split()
-                id, cls = parse_file_name(image_file_name)
+                id, _ = parse_file_name(image_file_name)
                 if (id not in id_map) or (id_map[id] is None):
                     id_map[id] = 1
                 else:
@@ -114,9 +114,9 @@ def parse_file_name(filename):
 
 
 def split_by_class(source_dir, target_dir):
-    """
-    Split dataset into folder by class
-    """
+    '''
+    Split data into folder by class
+    '''
     class_dirs = get_subdirs(source_dir)
 
     for cls_dir in class_dirs:
@@ -138,9 +138,9 @@ def split_by_class(source_dir, target_dir):
 
 
 def delete_by_identity(dir):
-    """
+    '''
     Let a_n and b_e contain different identities.
-    """
+    '''
 
     dir_a_n = dir + "/a_n"
     a_n_files = get_image_files(dir_a_n)
