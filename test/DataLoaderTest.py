@@ -5,14 +5,16 @@ This work is licensed under the MIT License.
 """
 
 import unittest
+import torch
 
 from torch import nn
-
+import matplotlib.pyplot as plt
 from DataLoader import *
-
-from Utils import show_img
+from torchvision.datasets import ImageFolder
+from Utils import show_imgs
 from torchvision import transforms
 import torch.nn.functional as F
+import numpy as np
 
 
 class HighPass(nn.Module):
@@ -78,7 +80,7 @@ class DataLoaderTest(unittest.TestCase):
 
         for i, t in enumerate(train_loader):
             print(i, len(t[0]))
-            show_img(t[0:-1])
+            show_imgs(t[0:-1])
             break
 
     def test_to_neutral_expression_file(self):
@@ -108,4 +110,4 @@ class DataLoaderTest(unittest.TestCase):
         print(sample.x_n.shape)
         sample.x_n = sample.x_n.mean(dim=1, keepdims=True)
         print(sample.x_n.shape)
-        show_img([sample.x_n, sample.x_e])
+        show_imgs([sample.x_n, sample.x_e])
