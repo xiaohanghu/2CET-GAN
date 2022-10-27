@@ -104,7 +104,7 @@ def split(source_dir, output_dir, save=False):
     print(f"races:{races}")
 
 
-root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+root_dir = "/Users/$USER/Documents/Repositories/datasets"
 
 
 def test_crop(source_dir):

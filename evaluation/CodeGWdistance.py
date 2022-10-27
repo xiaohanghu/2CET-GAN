@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 import numpy as np

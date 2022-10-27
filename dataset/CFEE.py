@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -136,7 +136,7 @@ def check_pairs(source_dir):
     print("Done!")
 
 
-root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+root_dir = "/Users/$USER/Documents/Repositories/datasets"
 source_dir = root_dir + "/CFEE_Database_230"
 output_dir = root_dir + "/expression_CFEE"
 

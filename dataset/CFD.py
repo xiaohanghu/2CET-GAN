@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -17,7 +17,7 @@ from torchvision.datasets import ImageFolder
 from FaceUtils import extract_face, extract_face_fixed
 from dataset.DataUtils import recreate_dir
 
-root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+root_dir = "/Users/$USER/Documents/Repositories/datasets"
 
 i_w = 256
 i_h = 256

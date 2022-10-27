@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -44,7 +44,7 @@ class DataLoaderTest(unittest.TestCase):
 
     def test_ImageFolder(self):
         ts = transforms.Compose([transforms.ToTensor()])
-        dataset = ImageFolder("/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFEE_p_128/train", ts)
+        dataset = ImageFolder("/Users/$USER/Documents/Repositories/datasets/expression_CFEE_p_128/train", ts)
         print(dataset.targets)
 
         train_loader = data.DataLoader(dataset=dataset,
@@ -62,7 +62,7 @@ class DataLoaderTest(unittest.TestCase):
             break
 
     def test(self):
-        root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+        root_dir = "/Users/$USER/Documents/Repositories/datasets"
         output_dir = root_dir + "/expression_1.0/a_n"
         ts = transforms.Compose([transforms.ToTensor()])
         dataset = ExpressionDataset(output_dir, ts)
@@ -82,7 +82,7 @@ class DataLoaderTest(unittest.TestCase):
             break
 
     def test_to_neutral_expression_file(self):
-        root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+        root_dir = "/Users/$USER/Documents/Repositories/datasets"
         output_dir = root_dir + "/expression_1.0"
         ts = transforms.Compose([transforms.ToTensor()])
         dataset = ExpressionPairedDataset(output_dir, ts)
@@ -94,7 +94,7 @@ class DataLoaderTest(unittest.TestCase):
             print(random.randint(0, 2))
 
     def test_create_sample_getter(self):
-        root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+        root_dir = "/Users/$USER/Documents/Repositories/datasets"
         output_dir = root_dir + "/expression_CFEE_1.0/train"
         config = Munch()
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -92,7 +92,7 @@ def get_images(root, files, transform, is_n=True):
     return torch.stack(imgs, dim=0)
 
 
-DATASETS_ROOT = "/Users/xiaohanghu/Documents/Repositories/datasets"
+DATASETS_ROOT = "/Users/$USER/Documents/Repositories/datasets"
 
 
 def get_config_():

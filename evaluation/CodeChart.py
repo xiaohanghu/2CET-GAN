@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -79,7 +79,7 @@ def show(happy, sad, angry):
     plt.show()
 
 
-DATASETS_ROOT = "/Users/xiaohanghu/Documents/Repositories/datasets"
+DATASETS_ROOT = "/Users/$USER/Documents/Repositories/datasets"
 
 
 def get_codes(image_files, transform, models_s):
@@ -139,10 +139,10 @@ def code_face(transform, config, models_s):
     add_org = False
     output_f = "ouput/code_face_CFEE.png"
 
-    # img_f_0 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-MF-346_n.png"
-    # img_f_1 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-AF-218_n.png"
-    # img_f_2 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-LM-212_n.png"
-    # img_f_3 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-MM-306_n.png"
+    # img_f_0 = "/Users/$USER/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-MF-346_n.png"
+    # img_f_1 = "/Users/$USER/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-AF-218_n.png"
+    # img_f_2 = "/Users/$USER/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-LM-212_n.png"
+    # img_f_3 = "/Users/$USER/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-MM-306_n.png"
     # img_0 = transform(Image.open(img_f_0).convert('RGB'))
     # img_1 = transform(Image.open(img_f_1).convert('RGB'))
     # img_2 = transform(Image.open(img_f_2).convert('RGB'))

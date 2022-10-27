@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -10,7 +10,7 @@ from FaceUtils import *
 
 
 class FaceUtilsTest(unittest.TestCase):
-    root_dir = "/Users/xiaohanghu/Documents/Repositories/datasets"
+    root_dir = "/Users/$USER/Documents/Repositories/datasets"
 
     def test_get_face_location_by_landmarks(self):
         file1 = FaceUtilsTest.root_dir + "/CFEE_Database_230/09-12/Images3/09_110_2555.jpg"

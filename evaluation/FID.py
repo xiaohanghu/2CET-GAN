@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -136,8 +136,8 @@ def calculate_all_fid(data_dir, eval_dir, config, batch_size=50):
 
 
 def test():
-    data_dir = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFEE_128/test"
-    eval_dir = "/Users/xiaohanghu/Documents/Repositories/expression-GAN/V2.6.6/test/eval/test"
+    data_dir = "/Users/$USER/Documents/Repositories/datasets/expression_CFEE_128/test"
+    eval_dir = "/Users/$USER/Documents/Repositories/expression-GAN/V2.6.6/test/eval/test"
     config = Munch()
     config.img_size = 128
     config.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

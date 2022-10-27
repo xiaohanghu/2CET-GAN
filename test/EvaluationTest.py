@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -15,7 +15,7 @@ from main import get_config
 
 
 class Test(unittest.TestCase):
-    DATASETS_ROOT = "/Users/xiaohanghu/Documents/Repositories/datasets"
+    DATASETS_ROOT = "/Users/$USER/Documents/Repositories/datasets"
     EG_VERSION = "V2.6.6"
     EG_DATASET = "expression_CFEE_128"
 
@@ -31,8 +31,8 @@ class Test(unittest.TestCase):
         config.encoder_grey = False
         config.eval_model_step = 44000
         config.models_dir = "../test/models"
-        config.test_dir = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFEE_128/test"
-        config.train_dir = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFEE_128/train"
+        config.test_dir = "/Users/$USER/Documents/Repositories/datasets/expression_CFEE_128/test"
+        config.train_dir = "/Users/$USER/Documents/Repositories/datasets/expression_CFEE_128/train"
         return config
 
     def test_SingleFolderDataset(self):
@@ -44,10 +44,10 @@ class Test(unittest.TestCase):
         config = self.get_config()
         models_s = EvalDataGenerator.get_models(config, 44000)
         transform = EvalDataGenerator.create_transform_test(config)
-        # config.eval_dir = "/Users/xiaohanghu/Documents/Repositories/expression-GAN/V2.6.6/test/eval"
+        # config.eval_dir = "/Users/$USER/Documents/Repositories/expression-GAN/V2.6.6/test/eval"
         # EvalDataGenerator.generate_eval(config.test_dir, config.eval_dir + "/test", models_s, transform, config)
 
-        config.eval_dir = "/Users/xiaohanghu/Documents/Repositories/expression-GAN/V2.6.6/test/eval/train"
+        config.eval_dir = "/Users/$USER/Documents/Repositories/expression-GAN/V2.6.6/test/eval/train"
         EvalDataGenerator.generate_eval(config.train_dir, config.eval_dir + "/train", models_s, transform, config)
 
     def test_evaluate_encoder(self):

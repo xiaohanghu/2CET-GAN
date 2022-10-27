@@ -1,6 +1,6 @@
 """
 2CET-GAN
-Copyright (c) 2022-present, Xiaohang Hu.
+Copyright (c) 2022-present, [author].
 This work is licensed under the MIT License.
 """
 
@@ -24,7 +24,7 @@ from torch import FloatTensor
 
 
 class Test(unittest.TestCase):
-    DATASETS_ROOT = "/Users/xiaohanghu/Documents/Repositories/datasets"
+    DATASETS_ROOT = "/Users/$USER/Documents/Repositories/datasets"
     EG_VERSION = "V2.8.7"
     EG_DATASET = "expression_CFEE_128"
 
@@ -65,8 +65,8 @@ class Test(unittest.TestCase):
         config.to_grey = False
         config.num_domains = 2
         config.batch_size = 2
-        config.output_dir = f"/Users/xiaohanghu/Documents/Repositories/expression-GAN/{Test.EG_VERSION}/test/output"
-        config.models_dir = f"/Users/xiaohanghu/Documents/Repositories/expression-GAN/{Test.EG_VERSION}/test/models"
+        config.output_dir = f"/Users/$USER/Documents/Repositories/expression-GAN/{Test.EG_VERSION}/test/output"
+        config.models_dir = f"/Users/$USER/Documents/Repositories/expression-GAN/{Test.EG_VERSION}/test/models"
         config.resume_iter = 0
         train(config)
 
@@ -89,7 +89,7 @@ class Test(unittest.TestCase):
         print(losses_to_str(losses))
 
     def test_file_existes(self):
-        file = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_1.0/b/14_16.png"
+        file = "/Users/$USER/Documents/Repositories/datasets/expression_1.0/b/14_16.png"
         print(os.path.exists(file))
 
     def test_random(self):
