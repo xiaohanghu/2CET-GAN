@@ -29,11 +29,12 @@ def show(happy, sad, angry):
     x = np.arange(0, 32, 1)
     CODE_MIN = -0.5
     CODE_MAX = 0.5
-    random = np.random.uniform(CODE_MIN, CODE_MAX, (len(happy), 32))
+    random = np.random.uniform(CODE_MIN, CODE_MAX, (len(angry), 32))
 
     fig, axs = plt.subplots(nrows=2, ncols=2, sharex=True, figsize=(10, 4))
 
-    alpha = 0.03
+    # alpha = 0.03
+    alpha = 0.1
 
     def show_bar(ax, ys, name):
         xmin = np.arange(-0.5, -0.5 + 32, 1)
@@ -61,6 +62,7 @@ def show(happy, sad, angry):
         ax.set_ylim([-0.51, 0.51])
 
     show_fun = show_line
+    show_fun = show_bar
     show_fun(axs[0][0], random, '(Random)')
     show_fun(axs[0][1], happy, 'Happy')
     show_fun(axs[1][0], sad, 'Sad')
@@ -103,13 +105,13 @@ def generate_data(config, models_s, transform):
         for img_index in img_indexes:
             # print(f"{i}")
             i += 1
-            img_e, _, _ = e_dataset[img_index]
+            img_e, _, _, _ = e_dataset[img_index]
             c_e = models_s.encoder(torch.unsqueeze(img_e, dim=0))
             # print(c_e)
             c_e_s.append(c_e.cpu().detach().numpy()[0])
         return c_e_s
 
-    for c in range(2, 27):
+    for c in range(1, 27):
         print(f"Generate {c:02}...")
         codes = get_codes(cls_index_map[f"{c:02}"])
         np.save(f"code_data/code_{c:02}.data", codes)
@@ -119,8 +121,7 @@ def generate_data_():
     config = get_config_()
 
     transform = DataLoader.create_transform_test(config)
-    step = 65000
-    models_s = get_models(config, step)
+    models_s = get_models(config, config.eval_model_step)
     generate_data(config, models_s, transform)
 
 
@@ -136,7 +137,7 @@ def code_face(transform, config, models_s):
     x_0 = torch.unsqueeze(img_0, dim=0)
     xs = [x_0, x_0, x_0, x_0]
     add_org = False
-    output_f = "code_face_CFEE.png"
+    output_f = "ouput/code_face_CFEE.png"
 
     # img_f_0 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-MF-346_n.png"
     # img_f_1 = "/Users/xiaohanghu/Documents/Repositories/datasets/expression_CFD_256/a_n/CFD-AF-218_n.png"
@@ -215,13 +216,18 @@ def code_face(transform, config, models_s):
 def get_config_():
     # 2.8.7.2
     config = get_config(None)
-    config.train_dir = DATASETS_ROOT + "/expression_CFEE_id_128/train"
-    config.test_dir = DATASETS_ROOT + "/expression_CFEE_id_128/test"
+    dataset = "expression_CFEE_id_128_V2"
+    config.train_dir = DATASETS_ROOT + f"/{dataset}/train"
+    config.test_dir = DATASETS_ROOT + f"/{dataset}/test"
     config.models_dir = "../test/models"
     config.output_dir = "../test/output"
     config.encoder_grey = True
     config.code_dim = 32
     config.img_size = 128
+
+    config.models_dir = "../test/models/CFEE/V2.9.0.0"
+    config.eval_model_step = 85000
+
     return config
 
 
@@ -229,8 +235,7 @@ def draw_chart():
     config = get_config_()
 
     transform = DataLoader.create_transform_test(config)
-    step = 65000
-    models_s = get_models(config, step)
+    models_s = get_models(config, config.eval_model_step)
     # generate_data(config,step,models_s,transform)
 
     # happy = np.load("code_data/code_02.data.npy")
@@ -246,6 +251,15 @@ def draw_chart():
     # show(happy, sad, angry)
 
     happy = np.load("code_data/code_11.data.npy")
+    print("type(happy):", happy.shape)
+    all = None
+    for i in range(1, 27):
+        d = np.load(f"code_data/code_{i:02d}.data.npy")
+        if all is None:
+            all = d
+        else:
+            all = np.concatenate((all, d), axis=0)
+    happy = all
     sad = np.load("code_data/code_11.data.npy")
     angry = np.load("code_data/code_10.data.npy")
 
@@ -285,7 +299,7 @@ def cut_code_face_CFEE():
 
 
 if __name__ == '__main__':
+    # generate_data_()
     draw_chart()
     # generate_code_face()
     # cut_code_face_CFEE()
-    # generate_data_()

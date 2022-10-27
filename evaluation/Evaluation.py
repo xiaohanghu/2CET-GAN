@@ -178,9 +178,9 @@ def evaluate_all(config):
     fid_e_r_train = []
 
     while (True):
-        models_s = get_models(config, config.eval_model_step)
-        if models_s is None:
+        if not model_exist(config, "model_s", config.eval_model_step):
             break
+        models_s = get_models(config, config.eval_model_step)
 
         generate_eval_data(num_each_cls, models_s, transform, config)
 
@@ -192,13 +192,8 @@ def evaluate_all(config):
                                                                                config.eval_dir + "/train",
                                                                                config,
                                                                                batch_size=50)
-        report = "\r\n------------------------------------------------------------------------"
-        report = append_report(report,
-                               f"step {config.eval_model_step}:")
-        report = append_report(report,
-                               f"  On test: fid_n={matrix.fid_n:.1f}, fid_e_z={matrix.fid_e_z:.1f}, fid_e_r={matrix.fid_e_r:.1f}")
-        report = append_report(report,
-                               f"  On train: fid_n={matrix.fid_n_1:.1f}, fid_e_z={matrix.fid_e_z_1:.1f}, fid_e_r={matrix.fid_e_r_1:.1f}")
+        config.logger_eval.log(
+            f"step {config.eval_model_step}: fid_n_test={matrix.fid_n:.1f}, fid_e_z_test={matrix.fid_e_z:.1f}, fid_e_r_test={matrix.fid_e_r:.1f}, fid_n_train={matrix.fid_n_1:.1f}, fid_e_z_train={matrix.fid_e_z_1:.1f}, fid_e_r_train={matrix.fid_e_r_1:.1f}")
 
         fid_e_z_test.append(matrix.fid_e_z)
         fid_e_z_train.append(matrix.fid_e_z_1)
@@ -208,8 +203,9 @@ def evaluate_all(config):
 
         config.eval_model_step = config.eval_model_step + save_every
 
-    report = append_report(report, f"fid_e_z_test = {np.around(fid_e_z_test, 1)}")
-    report = append_report(report, f"fid_e_z_train = {np.around(fid_e_z_train, 1)}")
-    report = append_report(report, f"fid_e_r_test = {np.around(fid_e_r_test, 1)}")
-    report = append_report(report, f"fid_e_r_train = {np.around(fid_e_r_train, 1)}")
+    report = ""
+    report = append_report(report, f"fid_e_z_test = {np.array2string(np.around(fid_e_z_test, 1), separator=',')}")
+    report = append_report(report, f"fid_e_z_train = {np.array2string(np.around(fid_e_z_train, 1), separator=',')}")
+    report = append_report(report, f"fid_e_r_test = {np.array2string(np.around(fid_e_r_test, 1), separator=',')}")
+    report = append_report(report, f"fid_e_r_train = {np.array2string(np.around(fid_e_r_train, 1), separator=',')}")
     config.logger_eval.log(report)

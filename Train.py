@@ -38,7 +38,7 @@ def encode(encoder, x_z, config):
 
 def loss_D_NEN(model, config, sample):
     """
-    D loss of cycle 1: N to E to N
+    D loss of cycle (a) N to E to N
     """
     x_n, x_e = sample.x_n.to(config.device), sample.x_e.to(config.device)
 
@@ -73,7 +73,7 @@ def loss_D_NEN(model, config, sample):
 
 def loss_D_ENE(model, config, sample):
     """
-    D loss of cycle 2: E to N to E
+    D loss of cycle (b) E to N to E
     """
     x_n, x_e = sample.x_n.to(config.device), sample.x_e.to(config.device)
 
@@ -109,7 +109,7 @@ def loss_D_ENE(model, config, sample):
 
 def loss_GE_NEN(model, config, sample):
     """
-    G and E loss of cycle 1: N to E to N
+    G and E loss of cycle (a) N to E to N
     """
     x_n = sample.x_n.to(config.device)
 
@@ -184,7 +184,7 @@ def loss_GE_NEN(model, config, sample):
 
 def loss_GE_ENE(model, config, sample):
     """
-    G and E loss of cycle 2: E to N to E
+    G and E loss of cycle (b) E to N to E
     """
     x_e = sample.x_e.to(config.device)
 
@@ -322,7 +322,7 @@ def train(config):
         config.lambda_ds_e = calculate_lambda(step, *lambda_ds_e_config)
         config.lambda_cyc_e = calculate_lambda(step, *lambda_cyc_e_config)
 
-        # training ratio of cycle 1 : cycle 2 is 3 : 2
+        # training ratio of cycle (a) : cycle (b) is 3 : 2
         sample1 = sample_getter.next_sample()
         train_step(model, [optims.discriminator], config, sample1, d_losses_avg, [loss_D_ENE, loss_D_NEN])
         train_step(model, [optims.encoder, optims.generator]

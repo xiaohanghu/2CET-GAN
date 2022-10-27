@@ -185,7 +185,7 @@ def generate_output_img_ENE(model_s, config, x_e, x_e_r, y_e_r, need_add_y, n_co
     x_fake_e = model_s.generator(x_fake_n, c_e_r)
 
     cols.append(denormalize_RGB(x_e))
-    cols.append(denormalize_RGB(x_fake_n))
+    # cols.append(denormalize_RGB(x_fake_n))
     cols.append(add_y_to_imgs_(denormalize_RGB(x_e_r), y_e_r, need_add_y))
     cols.append(add_y_to_imgs_(denormalize_RGB(x_fake_e), y_e_r, need_add_y))
 

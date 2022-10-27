@@ -45,7 +45,7 @@ def get_config(parser=None):
     parser.add_argument('--eval_model_step', type=int, default=0,
                         help='Model step for evaluation')
     parser.add_argument('--eval_generate_data', type=str2bool, default='True',
-                        help='Whether to generate new evaluation data')
+                        help='Whether to generate new evaluation dataset')
     parser.add_argument('--batch_size', type=int, default=8,
                         help='Training batch size')
     parser.add_argument('--test_batch_size', type=int, default=4,

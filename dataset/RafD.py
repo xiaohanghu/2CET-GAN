@@ -1,5 +1,6 @@
 import cv2
 import DataUtils
+import FaceUtils
 from munch import Munch
 import matplotlib.pyplot as plt
 

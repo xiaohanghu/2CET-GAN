@@ -54,7 +54,7 @@ def parse_file_name(filename):
 
 def split_data(source_dir, target_dir, ids_test=None, test_proportion=0.05):
     '''
-    Split data into train and test folder
+    Split dataset into train and test folder
     '''
     class_dirs = get_subdirs(source_dir)
     target_train_dir = target_dir + "/train"
@@ -115,7 +115,7 @@ def parse_file_name(filename):
 
 def split_by_class(source_dir, target_dir):
     '''
-    Split data into folder by class
+    Split dataset into folder by class
     '''
     class_dirs = get_subdirs(source_dir)
 

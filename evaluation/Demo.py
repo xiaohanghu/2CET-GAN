@@ -19,6 +19,8 @@ from main import get_config
 from DataLoader import create_sample_getter
 from PIL import Image
 from DataLoader import parse_file_name
+import DataLoader
+import random
 import cv2
 
 
@@ -93,23 +95,28 @@ def get_images(root, files, transform, is_n=True):
 DATASETS_ROOT = "/Users/xiaohanghu/Documents/Repositories/datasets"
 
 
-def get_config_(eval_model_step):
+def get_config_():
     # 2.8.8
     config = get_config(None)
     config.train_dir = DATASETS_ROOT + "/expression_CFEE_id_128/train"
     config.test_dir = DATASETS_ROOT + "/expression_CFEE_id_128/test"
-    config.models_dir = "../test/models"
     config.output_dir = "../test/output"
     config.encoder_grey = True
     config.code_dim = 32
     config.img_size = 128
-    config.eval_model_step = eval_model_step
+
+    config.models_dir = "../test/models/CFEE/V2.9.0.0"
+    config.eval_model_step = 85000
+
+    config.models_dir = "../test/models/"
+    config.eval_model_step = 65000
+
     return config
 
 
-def generate_demo():
+def generate_demo_NE():
     # 2.8.8
-    config = get_config_(eval_model_step=65000)
+    config = get_config_()
     _, sample_getter_test = create_sample_getter(config)
 
     transform = create_transform_test(config)
@@ -131,15 +138,45 @@ def generate_demo():
     generate_output_and_save(models_s, config, x_n, x_e, y_e, config.eval_model_step, 0, f"demo")
 
 
+def generate_demo_ENE_RaFD():
+    # 2.8.8
+    config = get_config_()
+    config.train_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/train"
+    config.test_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/test"
+    config.models_dir = config.models_dir + "RafD"
+    config.eval_model_step = 100000
+    _, sample_getter_test = create_sample_getter(config)
+
+    transform = create_transform_test(config)
+
+    es = ["57_90_2_05", "43_90_0_09", "67_90_2_06", "15_135_0_05"]
+    rs = ["21_135_2_03", "12_45_2_02", "57_90_2_08", "43_90_1_09"]
+
+    x_e = get_images(config.test_dir, es, transform, False)
+    x_e_r = get_images(config.test_dir, rs, transform, False)
+    print(x_e.shape)
+    y_e_r = []
+    for r in rs:
+        _, y = parse_file_name(r)
+        y_e_r.append(int(y))
+    y_e_r = torch.LongTensor(y_e_r)
+
+    # demo(config, sample_getter_test, config.eval_model_step, 10)
+
+    models_s = get_model(config, config.eval_model_step)
+    generate_output_and_save_ENE(models_s, config, x_e, x_e_r, y_e_r, config.eval_model_step, 0, f"demo_RaFD")
+
+
 def generate_demo_ENE():
     # 2.8.8
-    config = get_config_(eval_model_step=65000)
+    config = get_config_()
     _, sample_getter_test = create_sample_getter(config)
 
     transform = create_transform_test(config)
 
     es = ["288_03", "288_05", "294_02", "294_06", "357_07", "357_08", "263_11", "263_20"]
     rs = ["227_02", "176_02", "133_05", "269_05", "113_16", "207_16", "200_26", "303_26"]
+
     x_e = get_images(config.train_dir, es, transform, False)
     x_e_r = get_images(config.train_dir, rs, transform, False)
     print(x_e.shape)
@@ -157,7 +194,7 @@ def generate_demo_ENE():
 
 def generate_demo_test():
     # 2.8.8
-    config = get_config_(eval_model_step=65000)
+    config = get_config_()
     _, sample_getter_test = create_sample_getter(config)
 
     transform = create_transform_test(config)
@@ -183,7 +220,7 @@ def generate_demo_test():
 
 def generate_demo_CFE():
     # 2.8.8
-    config = get_config_(eval_model_step=65000)
+    config = get_config_()
     _, sample_getter_test = create_sample_getter(config)
 
     transform = create_transform_test(config)
@@ -302,7 +339,7 @@ def generate_demo_matrix_RafD():
     es = ["01_135_2_08", "64_90_1_09", "70_45_1_07",
           ]
     rs = ["23_135_0_02", "14_90_2_06", "63_45_1_05"]
-    config = get_config_(eval_model_step=100000)
+    config = get_config_()
     config.train_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/train"
     config.test_dir = DATASETS_ROOT + "/expression_RafD_gaze_id_128/test"
     config.models_dir = config.models_dir + "/RafD"
@@ -325,7 +362,7 @@ def generate_demo_matrix_CFEE():
           # "181_11",
           ]
     rs = ["392_02", "110_16", "209_05"]
-    config = get_config_(eval_model_step=60000)
+    config = get_config_()
     config.models_dir = config.models_dir
     generate_demo_matrix(config, es, rs, "CFEE")
 
@@ -398,7 +435,8 @@ def cut_demo_compare_test():
 
 
 if __name__ == '__main__':
-    # generate_demo()
+    # generate_demo_NE()
+    # generate_demo_ENE_RaFD()
     # generate_demo_ENE()
     # generate_demo_test()
     # generate_demo_CFE()
@@ -409,4 +447,26 @@ if __name__ == '__main__':
     # cut_structure()
     # cut_demo_compare()
     # cut_demo_compare_00()
-    cut_demo_compare_test()
+    # cut_demo_compare_test()
+
+    # 2.8.8
+    config = get_config_()
+    # sample_getter_train, sample_getter_test = create_sample_getter(config)
+    dir = config.train_dir + "/b_e"
+    fs = DataLoader.img_files(config.train_dir + "/b_e")
+    fs = [f.replace(".png", "") for f in fs]
+    cls_map = Munch()
+    for f in fs:
+        id, c = parse_file_name(f)
+        if (c not in cls_map) or (cls_map[c] is None):
+            cls_map[c] = []
+        cls_imgs = cls_map[c]
+        cls_imgs.append(f)
+
+    each = 3
+    fs_reference = []
+    for fs_c in cls_map.values():
+        fs_reference.extend(random.sample(fs_c, each))
+
+    n = len(fs_reference)
+    print(n)

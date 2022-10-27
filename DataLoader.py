@@ -353,7 +353,7 @@ def create_sample_getter(config):
     print(
         f"number of samples: n = {config.sample_num_n}, e={config.sample_num_e}, n/e={config.sample_n_ratio:.4f}")
 
-    print("Create data loader.")
+    print("Create dataset loader.")
     sample_getter_train = SampleGetter(config, train_loader_n, train_loader_e)
 
     train_loader_n_test = create_data_loader_test(config, "a_n", )
