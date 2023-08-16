@@ -74,4 +74,4 @@ python main.py \
 
 ##  Pretrained model
 
-https://drive.google.com/drive/folders/1Qih5ecl5KU5IPApZKe5P7lURtutCZpR_
+https://drive.google.com/drive/folders/1Qih5ecl5KU5IPApZKe5P7lURtutCZpR_?usp=drive_link
