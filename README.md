@@ -24,7 +24,7 @@ This is a pytorch implementation.
 [//]: # (<p ><img src="evaluation/output/structure_1.png" /></p>)
 
 [//]: # (2 cycles design of 2CET-GAN.)
-> Paper: https://arxiv.org/pdf/2211.11570.pdf
+> Paper: https://dl.acm.org/doi/pdf/10.1145/3607541.3616822
 
 ## Datasets
 You can apply the access of **CFEE** at: http://cbcsl.ece.ohio-state.edu/dbform_compound.html
