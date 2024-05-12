@@ -42,6 +42,7 @@ python main.py \
 --encoder_grey True \
 --lr_e 0.0001 \
 --lambda_reg 0.5 \
+--lambda_cyc_e_config 0,100000,1.0,1.0 \
 --lambda_c_e_config 5000,30000,1.0,1.0 \
 --lambda_ds_e_config 0,100000,1.0,0.0 \
 --train_dir ${DATASET_ROOT}/train \
